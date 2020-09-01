@@ -1,11 +1,10 @@
-# import xlsxwriter
 import random
 import sys
 import time
 import copy
 from math import inf
 
-def initGrid():
+def initGrid(): #creates the 3x3 TicTacToe Board
     grid = []
     for i in range(3):
         row = []
@@ -14,13 +13,13 @@ def initGrid():
         grid.append(row)
     return grid
 
-def printGrid(list):
+def printGrid(list): #displays the board
     for i in range(len(list)):
         for j in range(len(list[0])):
             print(list[i][j], end = "")
         print("")
 
-def twoInARow(list, val):
+def twoInARow(list, val): #checks to see if there are 2 of the same value (X or O) in a row/vertical/diagonal
     #top row
     if (list[0][0] == list[0][1] and list[0][2] == "[ ]" and list[0][0] == val):
         list[0][2] = val
@@ -104,7 +103,7 @@ def twoInARow(list, val):
     
     return False
 
-def twoInARowBlock(list, val, player):
+def twoInARowBlock(list, val, player): #does the same as the function above, but checks the player's value to see if the computer can block
     #top row
     if (list[0][0] == list[0][1] and list[0][2] == "[ ]" and list[0][0] == player):
         list[0][2] = val
@@ -226,7 +225,7 @@ def edges(list, val):
     
     return False
 
-def threeInARow(list, val):
+def threeInARow(list, val): #checks to see if there is a winner with 3 of a value in a row
     if (list[0][0] == list[0][1] and list[0][1] == list[0][2] and list[0][0] == val):
         return True
     if (list[1][0] == list[1][1] and list[1][1] == list[1][2] and list[1][0] == val):
@@ -246,14 +245,14 @@ def threeInARow(list, val):
     
     return False
 
-def findDraw(list):
+def findDraw(list): #checks to see if the board is full
     for i in range(len(list)):
         for j in range(len(list[i])):
             if (list[i][j] == "[ ]"):
                 return False
     return True
 
-def playerChooses(list, val):
+def playerChooses(list, val): #player's choice
     while True:
         r = int(input("Pick a row (0-2): "))
         c = int(input("Pick a column (0-2): "))
@@ -279,7 +278,7 @@ def playerChooses(list, val):
 #     start with center placement
 #     start with edge
 
-def computerChoosesRand(list, val):
+def computerChoosesRand(list, val): #random placement from the computer
     random.seed(a = None, version = 2)
     while True:
         comp_r = random.randint(0,2)
@@ -289,7 +288,7 @@ def computerChoosesRand(list, val):
             list[comp_r][comp_c] = val
             break
 
-def computerChoosesAI(list, val, player):
+def computerChoosesAI(list, val, player): #has certain priorities that it follows to block you, or go for a win
     #2 in a row of own
     if (twoInARow(list, val)):
         return
@@ -337,7 +336,7 @@ def makeScore(list, depth, val, player):
     
 #     return [moveX, moveY, score]
 
-def minimaxRecursive(list, depth, comp, player, val):
+def minimaxRecursive(list, depth, comp, player, val): #main bulk of minimax algorithm, set recursively so that it can test each possible move
     if (val == 1):
         best = [-1,-1,-inf]
     else:
@@ -368,7 +367,7 @@ def minimaxRecursive(list, depth, comp, player, val):
     return best
     
 
-def minimaxAI(list, val, player):
+def minimaxAI(list, val, player): #the unbeatable AI itself
     filled = 0
     for i in range(len(list)):
         for j in range(len(list[i])):
@@ -385,7 +384,7 @@ def minimaxAI(list, val, player):
     else:
         list[score[0]][score[1]] = val
 
-def playGameEasy(list):
+def playGameEasy(list): #plays with random choice
     choice = ""
     computer = ""
     while True:
@@ -414,7 +413,7 @@ def playGameEasy(list):
             break
         computerChoosesRand(list, computer)
 
-def playGameMedium(list):
+def playGameMedium(list): #plays with an AI that has certain priorities
     choice = ""
     computer = ""
     while True:
@@ -443,7 +442,7 @@ def playGameMedium(list):
             break
         computerChoosesAI(list, computer, choice)
 
-def playGameHard(list):
+def playGameHard(list): #plays game with minimax AI
     choice = ""
     computer = ""
     while True:
@@ -472,7 +471,7 @@ def playGameHard(list):
             break
         minimaxAI(list, computer, choice)
 
-def decision():
+def decision(): #allows player to choose difficulty
     while True:
         difficulty = int(input("How difficult do you want it? 0 for easy, 1 for medium,  and 2 for hard: "))
         if (difficulty == 0):
@@ -488,7 +487,7 @@ def decision():
             print("Not applicable. Choose a number in between 0 and 2.")
             continue
 
-def AITest():
+def AITest(): #used to test certain AIs against each other (Priorities vs Random: AI won ~700/1000 times, Priorities vs Minimax: All Draws, Minimax vs Random: Minimax won all)
     aiWins = 0
     randWins = 0
     ties = 0
@@ -520,6 +519,8 @@ def AITest():
 # playGame(initGrid())
 AITest()
 # decision()
+
+#Sources for Minimax learning
 #https://towardsdatascience.com/tic-tac-toe-creating-unbeatable-ai-with-minimax-algorithm-8af9e52c1e7d
 # https://github.com/Cledersonbc/tic-tac-toe-minimax/blob/master/py_version/minimax.py
 
